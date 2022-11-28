@@ -2,7 +2,8 @@
   "name": "har-save-as",
   "private": true,
   "scripts": {
-    "start": "node save-all-media.js"
+    "saveFromHar": "node save-all-media.js saveFromHar",
+    "downloadFromRemote": "node save-all-media.js downloadFromRemote"
   },
   "dependencies": {
     "md5": "^2.3.0"
