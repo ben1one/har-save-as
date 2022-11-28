@@ -5,23 +5,46 @@ const harFile = "www.douyin.com.har";
 const fs = require('fs');
 const https = require('https')
 const md5 = require('md5');
+const crypto = require('crypto');
 
 const myArgs = process.argv.slice(2);
 
-const saveFromHar = (filename, content) => {
-    fs.writeFile(filename, content.text, { encoding: content.encoding }, function (err) {
-        if (err) throw err;
-        console.log(`${filename} saved`)
+const rootRir = "output/";
+
+const getFileChecksum = (file) => {
+    const fileBuffer = fs.readFileSync(file);
+    const hashSum = crypto.createHash('md5');
+    hashSum.update(fileBuffer);    
+    const hex = hashSum.digest('hex');    
+    return hex;
+}    
+
+const renameWithChecksum = (oldPath) => {
+    console.log("Renaming", oldPath, `${rootRir}${getFileChecksum(oldPath)}.${oldPath.split('.')[1]}`);
+    fs.rename(oldPath, `${rootRir}${getFileChecksum(oldPath)}.${oldPath.split('.')[1]}`, function(err) {
+        if ( err ) console.log('ERROR: ' + err);
     });
 }
 
-const download = function (url, dest) {
+const saveFromHar = (filename, content) => {
+    fs.writeFile(`${rootRir}${filename}`, content.text, { encoding: content.encoding }, function (err) {
+        if (err) throw err;
+        console.log(`${filename} saved`)
+        renameWithChecksum(`${rootRir}${filename}`)
+    });
+}
+
+const download = function (url, filename) {
     const req = https.get(url, (res) => {
-        const filePath = fs.createWriteStream(dest);
+        if(res.statusCode !== 200){
+            throw new Error('Cannot get remote resources');
+        }
+        const filePath = fs.createWriteStream(`${rootRir}${filename}`);        
         res.pipe(filePath);
         filePath.on('finish', () => {
             filePath.close();
             console.log('Download Completed');
+            renameWithChecksum(`${rootRir}${filename}`)
         })
     })
     req.on('error', function (err) {
@@ -45,7 +68,7 @@ json.log.entries.forEach(element => {
         if (mimeType == "video/mp4") {
             if (typeof text == "string") {
                 const hash = md5(text);
-                const filename = `output/${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
+                const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
                 saveFromHar(filename, content)
             } else {
                 console.error("No Content")
@@ -58,7 +81,7 @@ json.log.entries.forEach(element => {
     if(myArgs[0]==="downloadFromRemote"){
         if (mimeType == "video/mp4") {
             const hash = md5(url);
-            const filename = `output/${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
+            const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
             download(url, filename, (e) => console.error(e))
         }
     }
