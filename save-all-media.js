@@ -64,6 +64,7 @@ json.log.entries.forEach(element => {
     } = element;
 
     // Note the request maybe broken as the video is not fully loaded
+    // Do not recommand this for TikTok
     if(myArgs[0]==="saveFromHar"){
         if (mimeType == "video/mp4") {
             if (typeof text == "string") {
