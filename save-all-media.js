@@ -14,15 +14,15 @@ const rootRir = "output/";
 const getFileChecksum = (file) => {
     const fileBuffer = fs.readFileSync(file);
     const hashSum = crypto.createHash('md5');
-    hashSum.update(fileBuffer);    
+    hashSum.update(fileBuffer);
     const hex = hashSum.digest('hex');
     return hex;
-}    
+}
 
 const renameWithChecksum = (oldPath) => {
     console.log("Renaming", oldPath, `${rootRir}${getFileChecksum(oldPath)}.${oldPath.split('.')[1]}`);
-    fs.rename(oldPath, `${rootRir}${getFileChecksum(oldPath)}.${oldPath.split('.')[1]}`, function(err) {
-        if ( err ) console.log('ERROR: ' + err);
+    fs.rename(oldPath, `${rootRir}${getFileChecksum(oldPath)}.${oldPath.split('.')[1]}`, function (err) {
+        if (err) console.log('ERROR: ' + err);
     });
 }
 
@@ -36,10 +36,10 @@ const saveFromHar = (filename, content) => {
 
 const download = function (url, filename) {
     const req = https.get(url, (res) => {
-        if(res.statusCode !== 200){
+        if (res.statusCode !== 200) {
             throw new Error('Cannot get remote resources');
         }
-        const filePath = fs.createWriteStream(`${rootRir}${filename}`);        
+        const filePath = fs.createWriteStream(`${rootRir}${filename}`);
         res.pipe(filePath);
         filePath.on('finish', () => {
             filePath.close();
@@ -67,8 +67,8 @@ json.log.entries.forEach(element => {
 
     // Note the request maybe broken as the video is not fully loaded
     // Do not recommand this for TikTok
-    if(myArgs[0]==="saveFromHar"){
-        if (mimeType == "video/mp4") {
+    if (myArgs[0] === "saveFromHar") {
+        if (mimeType == "video/mp4" || mimeType == "image/jpeg" || mimeType == "image/jpg") {
             if (typeof text == "string") {
                 const hash = i++;
                 const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
@@ -81,8 +81,8 @@ json.log.entries.forEach(element => {
     }
 
     // Note the url may expire
-    if(myArgs[0]==="downloadFromRemote"){
-        if (mimeType == "video/mp4") {
+    if (myArgs[0] === "downloadFromRemote") {
+        if (mimeType == "video/mp4" || mimeType == "image/jpeg" || mimeType == "image/jpg") {
             const hash = ++i;
             const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
             download(url, filename, (e) => console.error(e))
