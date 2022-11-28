@@ -2,6 +2,7 @@
   "name": "har-save-as",
   "private": true,
   "scripts": {
+    "test": "node save-all-media.js",
     "saveFromHar": "node save-all-media.js saveFromHar",
     "downloadFromRemote": "node save-all-media.js downloadFromRemote"
   },
