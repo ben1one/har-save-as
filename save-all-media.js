@@ -30,6 +30,7 @@ json.log.entries.forEach(element => {
             save(`${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`, content)
         } else {
             console.error("No Content")
+            throw err;
         }
 
     }
