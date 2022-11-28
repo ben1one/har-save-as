@@ -1,0 +1,10 @@
+{
+  "name": "har-save-as",
+  "private": true,
+  "scripts": {
+    "start": "node save-all-media.js"
+  },
+  "dependencies": {
+    "md5": "^2.3.0"
+  }
+}
