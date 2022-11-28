@@ -15,7 +15,7 @@ const getFileChecksum = (file) => {
     const fileBuffer = fs.readFileSync(file);
     const hashSum = crypto.createHash('md5');
     hashSum.update(fileBuffer);    
-    const hex = hashSum.digest('hex');    
+    const hex = hashSum.digest('hex');
     return hex;
 }    
 
@@ -55,6 +55,8 @@ const download = function (url, filename) {
 const rawdata = fs.readFileSync(harFile);
 const json = JSON.parse(rawdata);
 
+let i = 0;
+
 json.log.entries.forEach(element => {
     const {
         response: { content },
@@ -68,7 +70,7 @@ json.log.entries.forEach(element => {
     if(myArgs[0]==="saveFromHar"){
         if (mimeType == "video/mp4") {
             if (typeof text == "string") {
-                const hash = md5(text);
+                const hash = i++;
                 const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
                 saveFromHar(filename, content)
             } else {
@@ -81,7 +83,7 @@ json.log.entries.forEach(element => {
     // Note the url may expire
     if(myArgs[0]==="downloadFromRemote"){
         if (mimeType == "video/mp4") {
-            const hash = md5(url);
+            const hash = ++i;
             const filename = `${hash}.${mimeType.split(';')[0].split('/').slice(-1)}`;
             download(url, filename, (e) => console.error(e))
         }
