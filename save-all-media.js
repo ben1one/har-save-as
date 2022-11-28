@@ -37,7 +37,7 @@ const saveFromHar = (filename, content) => {
 const download = function (url, filename) {
     const req = https.get(url, (res) => {
         if (res.statusCode !== 200) {
-            throw new Error('Cannot get remote resources');
+            throw new Error('Cannot get remote resources: ' + url);
         }
         const filePath = fs.createWriteStream(`${rootRir}${filename}`);
         res.pipe(filePath);
