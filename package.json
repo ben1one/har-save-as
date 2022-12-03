@@ -7,6 +7,8 @@
     "downloadFromRemote": "node save-all-media.js downloadFromRemote"
   },
   "dependencies": {
-    "md5": "^2.3.0"
+    "@supercharge/fs": "^3.4.0",
+    "md5": "^2.3.0",
+    "parse-conflict-json": "^3.0.0"
   }
 }

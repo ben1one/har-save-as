@@ -2,10 +2,11 @@
 
 const harFile = "www.douyin.com.har";
 
-const fs = require('fs');
+const fs = require('@supercharge/fs');
 const https = require('https')
 const md5 = require('md5');
 const crypto = require('crypto');
+const parseConflictJson = require('parse-conflict-json');
 
 const myArgs = process.argv.slice(2);
 
@@ -53,7 +54,7 @@ const download = function (url, filename) {
 };
 
 const rawdata = fs.readFileSync(harFile);
-const json = JSON.parse(rawdata);
+const json = parseConflictJson(rawdata);
 
 let i = 0;
 
